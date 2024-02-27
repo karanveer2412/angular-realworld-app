@@ -10,11 +10,15 @@ import { RxLet } from "@rx-angular/template/let";
 import { IfAuthenticatedDirective } from "../../../../shared/directives/if-authenticated.directive";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 @Component({
   selector: "app-home-page",
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"],
   imports: [
+    FormsModule,
+
     NgClass,
     ArticleListComponent,
     AsyncPipe,

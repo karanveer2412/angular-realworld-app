@@ -7,37 +7,41 @@ import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { LoadingState } from "../../../core/models/loading-state.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+
 @Component({
   selector: "app-article-list",
-  template: `
-    @if (loading === LoadingState.LOADING) {
-      <div class="article-preview">Loading articles text changed...</div>
-    }
+  // template: `
+  //   @if (loading === LoadingState.LOADING) {
+  //     <div class="article-preview">{{ loaderText }}</div>
+  //     <button (click)="clicked()">change loader text</button>
+  //   }
 
-    @if (loading === LoadingState.LOADED) {
-      @for (article of results; track article.slug) {
-        <app-article-preview [article]="article" />
-      } @empty {
-        <div class="article-preview">No articles are here... yet.</div>
-      }
+  //   @if (loading === LoadingState.LOADED) {
+  //     @for (article of results; track article.slug) {
+  //       <app-article-preview [article]="article" />
+  //     } @empty {
+  //       <div class="article-preview">No articles are here... yet.</div>
+  //     }
 
-      <nav>
-        <ul class="pagination">
-          @for (pageNumber of totalPages; track pageNumber) {
-            <li
-              class="page-item"
-              [ngClass]="{ active: pageNumber === currentPage }"
-            >
-              <button class="page-link" (click)="setPageTo(pageNumber)">
-                {{ pageNumber }}
-              </button>
-            </li>
-          }
-        </ul>
-      </nav>
-    }
-  `,
-  imports: [ArticlePreviewComponent, NgForOf, NgClass, NgIf],
+  //     <nav>
+  //       <ul class="pagination">
+  //         @for (pageNumber of totalPages; track pageNumber) {
+  //           <li
+  //             class="page-item"
+  //             [ngClass]="{ active: pageNumber === currentPage }"
+  //           >
+  //             <button class="page-link" (click)="setPageTo(pageNumber)">
+  //               {{ pageNumber }}
+  //             </button>
+  //           </li>
+  //         }
+  //       </ul>
+  //     </nav>
+  //   }
+  // `,
+  templateUrl: "article-list.component.html",
+  imports: [ArticlePreviewComponent, NgForOf, NgClass, NgIf, FormsModule],
   styles: `
     .page-link {
       cursor: pointer;
@@ -53,6 +57,9 @@ export class ArticleListComponent {
   loading = LoadingState.NOT_LOADED;
   LoadingState = LoadingState;
   destroyRef = inject(DestroyRef);
+  loaderText = "Loader text is present here...";
+  comments: Array<any> = [];
+  comment = "";
 
   @Input() limit!: number;
   @Input()
@@ -69,6 +76,18 @@ export class ArticleListComponent {
   setPageTo(pageNumber: number) {
     this.currentPage = pageNumber;
     this.runQuery();
+  }
+
+  saveText(): void {
+    if (this.comment.trim()) {
+      // Check if the currentText is not just whitespace
+      this.comments.push(this.comment); // Add the currentText to the entries array
+      this.comment = ""; // Clear the textarea
+    }
+  }
+
+  clicked() {
+    this.loaderText = "text changed loading";
   }
 
   runQuery() {
