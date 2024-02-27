@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
   selector: "app-article-list",
   template: `
     @if (loading === LoadingState.LOADING) {
-      <div class="article-preview">Loading articles...</div>
+      <div class="article-preview">Loading articles text changed...</div>
     }
 
     @if (loading === LoadingState.LOADED) {
