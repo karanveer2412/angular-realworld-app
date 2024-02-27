@@ -11,7 +11,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
   selector: "app-article-list",
   template: `
     @if (loading === LoadingState.LOADING) {
-      <div class="article-preview">Loading articles...</div>
+      <div class="article-preview">{{ loaderText }}</div>
+      <button (click)="clicked()">change loader text</button>
     }
 
     @if (loading === LoadingState.LOADED) {
@@ -53,6 +54,7 @@ export class ArticleListComponent {
   loading = LoadingState.NOT_LOADED;
   LoadingState = LoadingState;
   destroyRef = inject(DestroyRef);
+  loaderText = "Loader text is present here...";
 
   @Input() limit!: number;
   @Input()
@@ -69,6 +71,10 @@ export class ArticleListComponent {
   setPageTo(pageNumber: number) {
     this.currentPage = pageNumber;
     this.runQuery();
+  }
+
+  clicked() {
+    this.loaderText = "text changed loading";
   }
 
   runQuery() {
