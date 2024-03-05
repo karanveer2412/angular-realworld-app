@@ -12,6 +12,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { TokenInterceptor } from "./core/interceptors/token.interceptor";
 import { ErrorInterceptor } from "./core/interceptors/error.interceptor";
 import { ApiInterceptor } from "./core/interceptors/api.interceptor";
+// import { FormsModule } from "@angular/forms";
 
 export function initAuth(jwtService: JwtService, userService: UserService) {
   return () => (jwtService.getToken() ? userService.getCurrentUser() : EMPTY);
@@ -25,6 +26,7 @@ export function initAuth(jwtService: JwtService, userService: UserService) {
     HeaderComponent,
     AppRoutingModule,
     HttpClientModule,
+    // FormsModule,
   ],
   providers: [
     {

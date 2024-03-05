@@ -7,37 +7,15 @@ import { NgClass, NgForOf, NgIf } from "@angular/common";
 import { LoadingState } from "../../../core/models/loading-state.model";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
+import { FormsModule } from "@angular/forms";
+
+interface Comment {
+  text: string;
+}
 @Component({
   selector: "app-article-list",
-  template: `
-    @if (loading === LoadingState.LOADING) {
-      <div class="article-preview">Loading articles text changed...</div>
-    }
-
-    @if (loading === LoadingState.LOADED) {
-      @for (article of results; track article.slug) {
-        <app-article-preview [article]="article" />
-      } @empty {
-        <div class="article-preview">No articles are here... yet.</div>
-      }
-
-      <nav>
-        <ul class="pagination">
-          @for (pageNumber of totalPages; track pageNumber) {
-            <li
-              class="page-item"
-              [ngClass]="{ active: pageNumber === currentPage }"
-            >
-              <button class="page-link" (click)="setPageTo(pageNumber)">
-                {{ pageNumber }}
-              </button>
-            </li>
-          }
-        </ul>
-      </nav>
-    }
-  `,
-  imports: [ArticlePreviewComponent, NgForOf, NgClass, NgIf],
+  templateUrl: "article-list.component.html",
+  imports: [ArticlePreviewComponent, NgForOf, NgClass, NgIf, FormsModule],
   styles: `
     .page-link {
       cursor: pointer;
@@ -53,6 +31,9 @@ export class ArticleListComponent {
   loading = LoadingState.NOT_LOADED;
   LoadingState = LoadingState;
   destroyRef = inject(DestroyRef);
+  loaderText = "Loader text is present here...";
+  comment = "";
+  comments: Array<String> = [];
 
   @Input() limit!: number;
   @Input()
@@ -69,6 +50,30 @@ export class ArticleListComponent {
   setPageTo(pageNumber: number) {
     this.currentPage = pageNumber;
     this.runQuery();
+  }
+
+  saveText(): void {
+    if (this.comment.trim()) {
+      this.comments.push(this.comment);
+      this.comment = "";
+    }
+  }
+
+  // saveText(): void {
+  //   if (this.comment.trim()) {
+  //     this.comments.push(this.comment);
+  //     this.comment = "";
+  //   }
+  // }
+
+  // saveText(): void {
+  //   if (this.comment.trim()) {
+  //     this.comments.push(this.comment);
+  //     this.comment = "";
+  //   }
+  // }
+  clicked() {
+    this.loaderText = "text changed loading";
   }
 
   runQuery() {
@@ -95,4 +100,29 @@ export class ArticleListComponent {
         );
       });
   }
+
+  // runQuery() {
+  //   this.loading = LoadingState.LOADING;
+  //   this.results = [];
+
+  //   // Create limit and offset filter (if necessary)
+  //   if (this.limit) {
+  //     this.query.filters.limit = this.limit;
+  //     this.query.filters.offset = this.limit * (this.currentPage - 1);
+  //   }
+
+  //   this.articlesService
+  //     .query(this.query)
+  //     .pipe(takeUntilDestroyed(this.destroyRef))
+  //     .subscribe((data) => {
+  //       this.loading = LoadingState.LOADED;
+  //       this.results = data.articles;
+
+  //       // Used from http://www.jstips.co/en/create-range-0...n-easily-using-one-line/
+  //       this.totalPages = Array.from(
+  //         new Array(Math.ceil(data.articlesCount / this.limit)),
+  //         (val, index) => index + 1,
+  //       );
+  //     });
+  // }
 }

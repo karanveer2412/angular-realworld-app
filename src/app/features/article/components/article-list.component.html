@@ -1,0 +1,19 @@
+<div>
+  <label for="content">Comment:</label>
+  <textarea
+    name="content"
+    [(ngModel)]="comment"
+    id="content"
+    class="form-control"
+    placeholder="enter text here"
+    (keydown.enter)="saveText(); $event.preventDefault()"
+  ></textarea>
+  <br />
+  <div>
+    <ul>
+      <li *ngFor="let comment of comments">
+        {{ comment }}
+      </li>
+    </ul>
+  </div>
+</div>
